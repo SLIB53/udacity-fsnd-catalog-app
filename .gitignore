@@ -1,2 +1,17 @@
+#Development Environment
+pyvenv.cfg
+pip-selfcheck.json
+
+## Development Environment (UNIX)
+bin
+include
+lib
+lib64
+share
+
+## Development Environment (Windows)
+Lib
+Scripts
+
 # IDE / Text Editor
 .vscode

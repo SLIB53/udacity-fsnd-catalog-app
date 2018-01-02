@@ -2,7 +2,78 @@
 
 Web application for storing categories and items.
 
+## Run
+
+To run the application, `Python 3` and the requirements listed in [`requirements.txt`](/requirements.txt) are required.
+
+```sh
+pip install -r requirements.txt
+```
+
+For additional information on installation, see the [Build Guide](#build-guide) section.
+
+To start the server, run `start_server.py`.
+
+```sh
+python start_server.py
+```
+
 ## Contribution
+
+### Build Guide
+
+#### Dependencies
+
+##### System
+
+- Python 3
+  - pip
+
+##### Additional
+
+- Python 3
+  - bottle
+
+#### Development Environment
+
+##### Ubuntu (16.04+) / Windows Subsystem for Linux
+
+Firstly, install system dependencies:
+
+```sh
+sudo apt install python3 python3-pip
+```
+
+Then, set up the python virtual environment (venv):
+
+```sh
+python3 -m venv . && source bin/activate
+```
+
+Lastly, install additional dependencies:
+
+```sh
+pip install -r requirements.txt
+```
+
+##### Windows 10
+
+_Note: The following instructions are expected to run on PowerShell._
+
+Firstly, install Python 3 with pip from [python.org](https://www.python.org/).
+
+Then, set up the python virtual environment (venv):
+
+```PowerShell
+python -m venv .
+.\Scripts\Activate.ps1
+```
+
+Lastly, install additional dependencies:
+
+```PowerShell
+pip install -r requirements.txt
+```
 
 ### IDE (Recommendation)
 
