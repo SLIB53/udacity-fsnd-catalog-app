@@ -4,13 +4,13 @@ Web application for storing categories and items.
 
 ## Run
 
-To run the application, `Python 3` and the requirements listed in [`requirements.txt`](/requirements.txt) are required.
+To run the application, `Python 3` and the requirements listed in [`requirements.txt`](/requirements.txt) must be installed.
 
 ```sh
 pip install -r requirements.txt
 ```
 
-For additional information on installation, see the [Build Guide](#build-guide) section.
+For additional information on installation, see the [Development Environment](#development-environment) section.
 
 To start the server, first set up the database by running:
 
