@@ -1,7 +1,7 @@
-from os.path import isfile
+from os.path import abspath, isfile
 from sqlite3 import connect
 
-DB_FILE_PATH = "catalog.db"
+DB_FILE_PATH = abspath("catalog.db")
 
 
 def setup():
