@@ -1,4 +1,6 @@
-#Development Environment
+**/catalog.db
+
+# Development Environment
 pyvenv.cfg
 pip-selfcheck.json
 
@@ -15,3 +17,6 @@ Scripts
 
 # IDE / Text Editor
 .vscode
+
+# Python
+__pycache__/
