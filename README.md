@@ -12,31 +12,28 @@ pip install -r requirements.txt
 
 For additional information on installation, see the [Build Guide](#build-guide) section.
 
-To start the server, run `start_server.py`.
+To start the server, first set up the database by running:
 
 ```sh
-python start_server.py
+python -c "from start_database import setup; setup()"
 ```
 
-## Contribution
+Then run `start.py`.
 
-### Build Guide
+```sh
+python start.py
+```
 
-#### Dependencies
+## Development Environment
 
-##### System
+### Dependencies
 
 - Python 3
   - pip
-
-##### Additional
-
-- Python 3
   - bottle
 
-#### Development Environment
 
-##### Ubuntu (16.04+) / Windows Subsystem for Linux
+#### Ubuntu (16.04+) / Windows Subsystem for Linux
 
 Firstly, install system dependencies:
 
@@ -56,7 +53,7 @@ Lastly, install additional dependencies:
 pip install -r requirements.txt
 ```
 
-##### Windows 10
+#### Windows 10
 
 _Note: The following instructions are expected to run on PowerShell._
 
