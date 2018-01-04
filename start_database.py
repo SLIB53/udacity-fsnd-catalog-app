@@ -9,6 +9,8 @@ def setup():
         connection = connect(DB_FILE_PATH)
         cursor = connection.cursor()
         cursor.execute(open("src/sql/create_category_table.sql").read())
+        cursor.execute(open("src/sql/create_item_table.sql").read())
+        cursor.execute(open("src/sql/create_category_item_table.sql").read())
     finally:
         cursor.close()
         connection.commit()

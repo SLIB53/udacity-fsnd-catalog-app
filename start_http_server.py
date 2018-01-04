@@ -45,6 +45,41 @@ def create_category():
         return
 
 
+@post("/api/v1/category/<category_id:int>/item")
+def create_child_item(category_id):
+    def parse_body(json_body):
+        try:
+            assert(json_body is not None)
+            return (json_body['name'], json_body.get('description', ''))
+        except:
+            raise catalog_errors.JSONBodyError()
+
+    try:
+        arg_name, arg_descr = parse_body(request.json)
+        item = catalog_api.create_child_item(gen_context(),
+                                             category_id,
+                                             arg_name,
+                                             arg_descr)
+
+        return {
+            "id": item.id,
+            "name": item.name,
+            "description": item.description,
+            "created_at": item.created_at,
+            "modified_at": item.modified_at
+        }
+    except catalog_errors.JSONBodyError as BodyError:
+        print("Application Error:", BodyError)
+        response.status = 400
+        return {"reason": "Body missing required parameter(s)."}
+    except Exception as Error:
+        import traceback
+        print("Unknown Error:", Error)
+        print("Trace:", traceback.format_exc())
+        response.status = 500
+        return
+
+
 def start():
     server_config = json.loads(open("config/server_config.json").read())
 
