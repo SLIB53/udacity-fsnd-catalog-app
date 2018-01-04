@@ -14,8 +14,10 @@ def make_category(context, name):
             # Write row
 
             insert_query = '''
-                INSERT INTO category("name", "created_at", "modified_at")
-                    VALUES (?, strftime('%s', 'now'), strftime('%s', 'now'));
+                INSERT INTO category("name",
+                                     "created_at", "modified_at")
+                VALUES (?,
+                        strftime('%s', 'now'), strftime('%s', 'now'));
             '''
             cursor.execute(insert_query, name)
             connection.commit()
@@ -23,8 +25,9 @@ def make_category(context, name):
             # Pull results
 
             fetch_query = '''
-                SELECT id, name, created_at, modified_at FROM category
-                    WHERE id=?
+                SELECT id, name, created_at, modified_at
+                  FROM category
+                 WHERE id=?;
             '''
 
             cursor.execute(fetch_query, (cursor.lastrowid,))
