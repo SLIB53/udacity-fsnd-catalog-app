@@ -25,6 +25,11 @@ def create_category(context, name):
     return Category(category_id, name, created_at, modified_at)
 
 
+def list_all_categories(context):
+    return [Category(*data)
+            for data in catalog_data.fetch_all_categories(context)]
+
+
 def create_item(context, name, description):
     item_id, name, description, created_at, modified_at = \
         catalog_data.make_item(context, name, description)

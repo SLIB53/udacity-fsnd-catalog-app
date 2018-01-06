@@ -1,5 +1,5 @@
 import json
-from bottle import post, request, response, run
+from bottle import get, post, request, response, run
 import src.catalog_api as catalog_api
 import src.catalog_errors as catalog_errors
 import start_database
@@ -37,6 +37,20 @@ def create_category():
         print("Application Error:", BodyError)
         response.status = 400
         return {"reason": "Body missing required parameter(s)."}
+    except Exception as Error:
+        import traceback
+        print("Unknown Error:", Error)
+        print("Trace:", traceback.format_exc())
+        response.status = 500
+        return
+
+
+@get("/api/v1/categories")
+def list_all_categories():
+    try:
+        categories = list(map(_category_to_dict,
+                              catalog_api.list_all_categories(gen_context())))
+        return json.dumps(categories)
     except Exception as Error:
         import traceback
         print("Unknown Error:", Error)
@@ -85,3 +99,12 @@ def start():
 
     run(host=server_config["host"],
         port=server_config["port"])
+
+
+def _category_to_dict(category):
+    return {
+        "id": category.id,
+        "name": category.name,
+        "created_at": category.created_at,
+        "modified_at": category.modified_at
+    }
