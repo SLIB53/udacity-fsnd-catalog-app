@@ -16,10 +16,6 @@ class APIError(CatalogAppError):
     pass
 
 
-# class ArgumentTypeError(APIError):
-#     pass
-
-
 class DBError(CatalogAppError):
     """Base class for data layer level exceptions."""
     pass

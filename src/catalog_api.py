@@ -19,10 +19,7 @@ class Item:
 
 
 def create_category(context, name):
-    category_id, name, created_at, modified_at = \
-        catalog_data.make_category(context, name)
-
-    return Category(category_id, name, created_at, modified_at)
+    return Category(*catalog_data.make_category(context, name))
 
 
 def list_all_categories(context):
@@ -31,10 +28,7 @@ def list_all_categories(context):
 
 
 def create_item(context, name, description):
-    item_id, name, description, created_at, modified_at = \
-        catalog_data.make_item(context, name, description)
-
-    return Item(item_id, name, description, created_at, modified_at)
+    return Item(*catalog_data.make_item(context, name, description))
 
 
 def create_child_item(context,

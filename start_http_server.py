@@ -1,4 +1,5 @@
 import json
+import traceback
 from bottle import get, post, request, response, run
 import src.catalog_api as catalog_api
 import src.catalog_errors as catalog_errors
@@ -19,30 +20,21 @@ def create_category():
     def parse_body(json_body):
         try:
             assert(json_body is not None)
-            return (json_body['name'],)
+            return json_body['name']
         except:
             raise catalog_errors.JSONBodyError()
 
     try:
         arg_name = parse_body(request.json)
-        category = catalog_api.create_category(gen_context(), arg_name)
-
-        return {
-            "id": category.id,
-            "name": category.name,
-            "created_at": category.created_at,
-            "modified_at": category.modified_at
-        }
+        return _category_to_dict(catalog_api.create_category(gen_context(),
+                                                             arg_name))
     except catalog_errors.JSONBodyError as BodyError:
-        print("Application Error:", BodyError)
+        _report_application_error(BodyError)
         response.status = 400
         return {"reason": "Body missing required parameter(s)."}
     except Exception as Error:
-        import traceback
-        print("Unknown Error:", Error)
-        print("Trace:", traceback.format_exc())
+        _report_unkown_error(Error)
         response.status = 500
-        return
 
 
 @get("/api/v1/categories")
@@ -52,11 +44,8 @@ def list_all_categories():
                               catalog_api.list_all_categories(gen_context())))
         return json.dumps(categories)
     except Exception as Error:
-        import traceback
-        print("Unknown Error:", Error)
-        print("Trace:", traceback.format_exc())
+        _report_unkown_error(Error)
         response.status = 500
-        return
 
 
 @post("/api/v1/category/<category_id:int>/item")
@@ -70,28 +59,18 @@ def create_child_item(category_id):
 
     try:
         arg_name, arg_descr = parse_body(request.json)
-        item = catalog_api.create_child_item(gen_context(),
-                                             category_id,
-                                             arg_name,
-                                             arg_descr)
+        return _item_to_dict(catalog_api.create_child_item(gen_context(),
+                                                           category_id,
+                                                           arg_name,
+                                                           arg_descr))
 
-        return {
-            "id": item.id,
-            "name": item.name,
-            "description": item.description,
-            "created_at": item.created_at,
-            "modified_at": item.modified_at
-        }
     except catalog_errors.JSONBodyError as BodyError:
-        print("Application Error:", BodyError)
+        _report_application_error(BodyError)
         response.status = 400
         return {"reason": "Body missing required parameter(s)."}
     except Exception as Error:
-        import traceback
-        print("Unknown Error:", Error)
-        print("Trace:", traceback.format_exc())
+        _report_unkown_error(Error)
         response.status = 500
-        return
 
 
 def start():
@@ -108,3 +87,23 @@ def _category_to_dict(category):
         "created_at": category.created_at,
         "modified_at": category.modified_at
     }
+
+
+def _item_to_dict(item):
+    return {
+        "id": item.id,
+        "name": item.name,
+        "description": item.description,
+        "created_at": item.created_at,
+        "modified_at": item.modified_at
+    }
+
+
+def _report_application_error(application_exception):
+    print("Application Error:", application_exception)
+    print("Trace:", traceback.format_exc())
+
+
+def _report_unkown_error(exception):
+    print("Unknown Error:", exception)
+    print("Trace:", traceback.format_exc())

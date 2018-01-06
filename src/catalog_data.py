@@ -19,7 +19,7 @@ def make_category(context, name):
                 VALUES (?,
                         strftime('%s', 'now'), strftime('%s', 'now'));
             '''
-            cursor.execute(insert_query, name)
+            cursor.execute(insert_query, (name,))
             connection.commit()
 
             # Pull results
@@ -31,11 +31,11 @@ def make_category(context, name):
             '''
 
             cursor.execute(fetch_query, (cursor.lastrowid,))
-            category_id, name, created_at, modified_at = cursor.fetchone()
+            fetch_response = cursor.fetchone()
 
             cursor.close()
 
-            return (category_id, name, created_at, modified_at)
+            return fetch_response
     except:
         raise catalog_errors.DBError()
 
@@ -55,11 +55,11 @@ def fetch_all_categories(context):
             '''
 
             cursor.execute(fetch_query)
-            fetch_results = cursor.fetchall()
+            fetch_response = cursor.fetchall()
 
             cursor.close()
 
-            return fetch_results
+            return fetch_response
     except:
         raise catalog_errors.DBError()
 
@@ -96,12 +96,11 @@ def make_item(context, name, description):
                  WHERE id = ?;
             '''
             cursor.execute(fetch_query, (cursor.lastrowid,))
-            item_id, name, description, created_at, modified_at = \
-                cursor.fetchone()
+            fetch_response = cursor.fetchone()
 
             cursor.close()
 
-            return (item_id, name, description, created_at, modified_at)
+            return fetch_response
     except:
         raise catalog_errors.DBError()
 
@@ -122,7 +121,5 @@ def add_category_item_relationship(context, category_id, item_id):
             connection.commit()
 
             cursor.close()
-
-            return
     except:
         raise catalog_errors.DBError()
