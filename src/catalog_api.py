@@ -31,6 +31,14 @@ def create_item(context, name, description):
     return Item(*catalog_data.make_item(context, name, description))
 
 
+def list_all_items(context, order_by='id', order='ascend', limit=10):
+    return [Item(*data)
+            for data in catalog_data.fetch_all_items(context,
+                                                     order_by,
+                                                     order,
+                                                     limit)]
+
+
 def create_child_item(context,
                       parent_category_id,
                       item_name,

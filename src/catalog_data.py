@@ -105,6 +105,36 @@ def make_item(context, name, description):
         raise catalog_errors.DBError()
 
 
+def fetch_all_items(context, order_by, order, limit):
+    """
+    Returns list of tuples
+    [(id, name, description, created_at, modified_at), ...].
+    """
+    try:
+        connection = connect(context.db_uri)
+        with connection:
+            cursor = connection.cursor()
+
+            order_by_arg = 'created_at' if order_by.lower() == 'age' else 'id'
+            order_arg = 'DESC' if order.lower() == 'descend' else 'ASC'
+
+            fetch_query = '''
+                  SELECT id, name, description, created_at, modified_at
+                    FROM item
+                ORDER BY %s %s
+                   LIMIT ?
+            ''' % (order_by_arg, order_arg)
+
+            cursor.execute(fetch_query, (limit,))
+            fetch_response = cursor.fetchall()
+
+            cursor.close()
+
+            return fetch_response
+    except:
+        raise catalog_errors.DBError()
+
+
 def add_category_item_relationship(context, category_id, item_id):
     try:
         connection = connect(context.db_uri)

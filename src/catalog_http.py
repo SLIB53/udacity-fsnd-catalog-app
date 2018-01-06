@@ -74,6 +74,41 @@ def create_child_item(category_id):
         response.status = 500
 
 
+@get("/api/v1/items")
+def list_all_items():
+    try:
+        # Parse query
+
+        # NOTE: Undynamically parses query to constrain usage of incoming data.
+        #       This may be non-idiomatic.
+
+        q_order_by = 'id'
+        if request.query.get('order_by') == 'age':
+            q_order_by = 'age'
+
+        q_order = 'ascend'
+        if request.query.get('order') == 'desc':
+            q_order = 'descend'
+
+        q_limit = request.query.get('limit', 10)
+        if not isinstance(q_limit, int) and q_limit.isdigit():
+            q_limit = int(q_limit)
+
+        # Format fetched items
+
+        items = list(map(_item_to_dict,
+                         catalog_api.list_all_items(gen_context(),
+                                                    q_order_by,
+                                                    q_order,
+                                                    q_limit)))
+
+        response.set_header('Content-Type', 'application/json')
+        return json.dumps(items)
+    except Exception as Error:
+        _report_unkown_error(Error)
+        response.status = 500
+
+
 def _category_to_dict(category):
     return {
         "id": category.id,
