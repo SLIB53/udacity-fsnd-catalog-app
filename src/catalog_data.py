@@ -133,6 +133,36 @@ def fetch_item(context, item_id):
         raise catalog_errors.DBError()
 
 
+def update_item(context, item_id, name=None, description=None):
+    try:
+        connection = connect(context.db_uri)
+        with connection:
+            cursor = connection.cursor()
+
+            if name:
+                update_name_query = '''
+                    UPDATE item
+                    SET name = ?
+                    WHERE id = ?;
+                '''
+                cursor.execute(update_name_query,
+                               (name, item_id))
+
+            if description:
+                update_description_query = '''
+                    UPDATE item
+                    SET description = ?
+                    WHERE id = ?;
+                '''
+                cursor.execute(update_description_query,
+                               (description, item_id))
+
+            cursor.close()
+            connection.commit()
+    except:
+        raise catalog_errors.DBError()
+
+
 def delete_item(context, item_id):
     try:
         connection = connect(context.db_uri)

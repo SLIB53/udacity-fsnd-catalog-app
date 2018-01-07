@@ -1,4 +1,5 @@
 import src.catalog_data as catalog_data
+import src.catalog_errors as catalog_errors
 
 
 class Category:
@@ -34,6 +35,13 @@ def create_item(context, name, description):
 def get_item(context, item_id):
     data = catalog_data.fetch_item(context, item_id)
     return Item(*data) if data else None
+
+
+def update_item(context, item_id, name=None, description=None):
+    if get_item(context, item_id):
+        catalog_data.update_item(context, item_id, name, description)
+    else:
+        raise catalog_errors.ObjectNotFoundError()
 
 
 def delete_item(context, item_id):

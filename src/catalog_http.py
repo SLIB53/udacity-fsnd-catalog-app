@@ -1,6 +1,6 @@
 import json
 import traceback
-from bottle import get, post, delete, request, response, run
+from bottle import delete, get, post, put, request, response, run
 import src.catalog_api as catalog_api
 import src.catalog_errors as catalog_errors
 import start_database
@@ -91,6 +91,31 @@ def get_item(item_id):
         response.status = 500
 
 
+@put("/api/v1/item/<item_id:int>")
+def update_item(item_id):
+    def parse_body(json_body):
+        try:
+            if json_body:
+                return (json_body.get('name'), json_body.get('description'))
+            else:
+                return (None, None)
+        except:
+            raise catalog_errors.JSONBodyError()
+
+    try:
+        arg_name, arg_descr = parse_body(request.json)
+        catalog_api.update_item(gen_context(), item_id, arg_name, arg_descr)
+
+        response.status = 204
+
+    except catalog_errors.ObjectNotFoundError as NotFoundError:
+        _report_application_error(NotFoundError)
+        response.status = 404
+    except Exception as Error:
+        _report_unkown_error(Error)
+        response.status = 500
+
+
 @delete("/api/v1/item/<item_id:int>")
 def delete_item(item_id):
     try:
@@ -106,9 +131,6 @@ def delete_item(item_id):
 def list_all_items():
     try:
         # Parse query
-
-        # NOTE: Undynamically parses query to constrain usage of incoming data.
-        #       This may be non-idiomatic.
 
         q_order_by = 'id'
         if request.query.get('order_by') == 'age':

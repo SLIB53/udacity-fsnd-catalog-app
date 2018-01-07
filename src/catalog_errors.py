@@ -16,6 +16,10 @@ class APIError(CatalogAppError):
     pass
 
 
+class ObjectNotFoundError(APIError):
+    pass
+
+
 class DBError(CatalogAppError):
     """Base class for data layer level exceptions."""
     pass
