@@ -105,6 +105,34 @@ def make_item(context, name, description):
         raise catalog_errors.DBError()
 
 
+def fetch_item(context, item_id):
+    """
+    Returns tuple (id, name, description, created_at, modified_at).
+    """
+    try:
+        connection = connect(context.db_uri)
+        with connection:
+            cursor = connection.cursor()
+
+            fetch_query = '''
+                SELECT "id",
+                       "name",
+                       "description",
+                       "created_at",
+                       "modified_at"
+                  FROM item
+                 WHERE id = ?;
+            '''
+            cursor.execute(fetch_query, (item_id,))
+            fetch_response = cursor.fetchone()
+
+            cursor.close()
+
+            return fetch_response
+    except:
+        raise catalog_errors.DBError()
+
+
 def fetch_all_items(context, order_by, order, limit):
     """
     Returns list of tuples

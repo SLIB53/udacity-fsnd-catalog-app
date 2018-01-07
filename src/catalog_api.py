@@ -31,6 +31,11 @@ def create_item(context, name, description):
     return Item(*catalog_data.make_item(context, name, description))
 
 
+def get_item(context, item_id):
+    data = catalog_data.fetch_item(context, item_id)
+    return Item(*data) if data else None
+
+
 def list_all_items(context, order_by='id', order='ascend', limit=10):
     return [Item(*data)
             for data in catalog_data.fetch_all_items(context,

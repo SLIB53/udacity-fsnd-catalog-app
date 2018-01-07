@@ -74,6 +74,21 @@ def create_child_item(category_id):
         response.status = 500
 
 
+@get("/api/v1/item/<item_id:int>")
+def get_item(item_id):
+    try:
+        i = catalog_api.get_item(gen_context(), item_id)
+
+        if i:
+            return _item_to_dict(i)
+        else:
+            response.status = 404
+
+    except Exception as Error:
+        _report_unkown_error(Error)
+        response.status = 500
+
+
 @get("/api/v1/items")
 def list_all_items():
     try:
