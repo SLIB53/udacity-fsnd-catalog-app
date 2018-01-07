@@ -15,7 +15,7 @@ POST /api/v1/category
 ## Response
 
 ```text
-200 OK
+201 Created
 ```
 
 ```json

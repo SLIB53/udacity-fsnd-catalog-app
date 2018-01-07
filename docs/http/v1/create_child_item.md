@@ -16,7 +16,7 @@ POST /api/v1/category/<category_id>/item
 ## Response
 
 ```text
-200 OK
+201 Created
 ```
 
 ```json

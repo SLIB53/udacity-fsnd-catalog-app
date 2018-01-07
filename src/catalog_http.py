@@ -26,6 +26,7 @@ def create_category():
 
     try:
         arg_name = parse_body(request.json)
+        response.status = 201
         return _category_to_dict(catalog_api.create_category(gen_context(),
                                                              arg_name))
     except catalog_errors.JSONBodyError as BodyError:
@@ -60,6 +61,7 @@ def create_child_item(category_id):
 
     try:
         arg_name, arg_descr = parse_body(request.json)
+        response.status = 201
         return _item_to_dict(catalog_api.create_child_item(gen_context(),
                                                            category_id,
                                                            arg_name,
