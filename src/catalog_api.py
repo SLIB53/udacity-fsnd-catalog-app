@@ -36,6 +36,10 @@ def get_item(context, item_id):
     return Item(*data) if data else None
 
 
+def delete_item(context, item_id):
+    catalog_data.delete_item(context, item_id)
+
+
 def list_all_items(context, order_by='id', order='ascend', limit=10):
     return [Item(*data)
             for data in catalog_data.fetch_all_items(context,

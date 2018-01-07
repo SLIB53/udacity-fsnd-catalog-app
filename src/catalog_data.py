@@ -133,6 +133,23 @@ def fetch_item(context, item_id):
         raise catalog_errors.DBError()
 
 
+def delete_item(context, item_id):
+    try:
+        connection = connect(context.db_uri)
+        with connection:
+            cursor = connection.cursor()
+
+            delete_query = '''
+                DELETE FROM item
+                 WHERE id = ?;
+            '''
+            cursor.execute(delete_query, (item_id,))
+
+            cursor.close()
+    except:
+        raise catalog_errors.DBError()
+
+
 def fetch_all_items(context, order_by, order, limit):
     """
     Returns list of tuples

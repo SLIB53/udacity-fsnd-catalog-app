@@ -1,6 +1,6 @@
 import json
 import traceback
-from bottle import get, post, request, response, run
+from bottle import get, post, delete, request, response, run
 import src.catalog_api as catalog_api
 import src.catalog_errors as catalog_errors
 import start_database
@@ -83,6 +83,17 @@ def get_item(item_id):
             return _item_to_dict(i)
         else:
             response.status = 404
+
+    except Exception as Error:
+        _report_unkown_error(Error)
+        response.status = 500
+
+
+@delete("/api/v1/item/<item_id:int>")
+def delete_item(item_id):
+    try:
+        catalog_api.delete_item(gen_context(), item_id)
+        response.status = 204
 
     except Exception as Error:
         _report_unkown_error(Error)
