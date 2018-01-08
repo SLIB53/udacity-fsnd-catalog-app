@@ -1,10 +1,28 @@
 import json
 import traceback
-from bottle import delete, get, post, put, request, response, run
+from bottle import delete, get, post, put, request, response, static_file, run
 import src.catalog_api as catalog_api
 import src.catalog_errors as catalog_errors
 import start_database
 
+
+#
+# Public Directory
+#
+
+@get("/")
+def root():
+    return public("index.html")
+
+
+@get("/<filepath>")
+def public(filepath):
+    return static_file(filename=filepath, root="public")
+
+
+#
+# API
+#
 
 class RequestContext:
     def __init__(self, db_uri):
