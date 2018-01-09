@@ -9,22 +9,23 @@
 
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script>
-        let urlParams = new URLSearchParams(window.location.search);
-        let itemId = urlParams.get('item_id');
-
-        // Bind Item
-        window.addEventListener('load', function() {
+        function loadItemBinding(itemId, elemSelector)
+        {
             let req = new XMLHttpRequest();
             req.open("GET", "/api/v1/item/" + itemId, true);
             req.addEventListener('load', function() {
                 new Vue({
-                    el: '#item-wrapper',
-                    data: {
-                        item: JSON.parse(req.responseText)
-                    }
+                    el: elemSelector,
+                    data: { item: JSON.parse(req.responseText) }
                 });
             });
             req.send(null);
+        }
+
+        let urlQuery = new URLSearchParams(window.location.search);
+
+        window.addEventListener('load', function() {
+            loadItemBinding(urlQuery.get('item_id'), '#item-wrapper');
         });
     </script>
 </head>
