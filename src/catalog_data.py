@@ -235,8 +235,15 @@ def fetch_all_items(context, order_by, order, limit):
         with connection:
             cursor = connection.cursor()
 
-            order_by_arg = 'created_at' if order_by.lower() == 'age' else 'id'
-            order_arg = 'DESC' if order.lower() == 'descend' else 'ASC'
+            order_by_arg = ''
+            order_arg = ''
+
+            if order_by.lower() == 'age':
+                order_by_arg = 'created_at'
+                order_arg = 'ASC' if order.lower() == 'descend' else 'DESC'
+            else:
+                order_by_arg = 'id'
+                order_arg = 'DESC' if order.lower() == 'descend' else 'ASC'
 
             fetch_query = '''
                   SELECT id, name, description, created_at, modified_at
