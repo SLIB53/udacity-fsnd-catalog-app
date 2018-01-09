@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="styles.css">
 
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/vue"></script>
     <script>
         window.addEventListener('load', function() {
             var req = new XMLHttpRequest();
@@ -46,13 +46,17 @@
         <section id="categories-wrapper">
             <h2 class="front-page-header">Categories</h2>
             <ul class="catalog-object-list">
-                <li v-for="category in categories"> {{ category.name }} </li>
+                <li v-for="category in categories">
+                    <a class="catalog-object-button" v-bind:href="'/category?category_id=' + category.id"> {{ category.name }} </a>
+                </li>
             </ul>
         </section>
         <section id="recent-items-wrapper">
             <h2 class="front-page-header">Recent Items</h2>
             <ul class="catalog-object-list">
-                <li v-for="item in recentItems"> {{ item.name }} </li>
+                <li v-for="item in recentItems">
+                    <a class="catalog-object-button" v-bind:href="'/item?item_id=' + item.id"> {{ item.name }} </a>
+                </li>
             </ul>
         </section>
     </main>
