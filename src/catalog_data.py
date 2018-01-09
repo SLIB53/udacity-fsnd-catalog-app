@@ -165,6 +165,7 @@ def update_item(context, item_id, name=None, description=None):
         connection = connect(context.db_uri)
         with connection:
             cursor = connection.cursor()
+            dirty_flag = False
 
             if name:
                 update_name_query = '''
@@ -174,6 +175,7 @@ def update_item(context, item_id, name=None, description=None):
                 '''
                 cursor.execute(update_name_query,
                                (name, item_id))
+                dirty_flag = True
 
             if description:
                 update_description_query = '''
@@ -183,6 +185,16 @@ def update_item(context, item_id, name=None, description=None):
                 '''
                 cursor.execute(update_description_query,
                                (description, item_id))
+                dirty_flag = True
+
+            if dirty_flag:
+                update_description_query = '''
+                    UPDATE item
+                    SET modified_at = strftime('%s', 'now')
+                    WHERE id = ?;
+                '''
+                cursor.execute(update_description_query,
+                               (item_id,))
 
             cursor.close()
             connection.commit()
