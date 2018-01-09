@@ -23,6 +23,11 @@ def create_category(context, name):
     return Category(*catalog_data.make_category(context, name))
 
 
+def get_category(context, category_id):
+    data = catalog_data.fetch_category(context, category_id)
+    return Category(*data) if data else None
+
+
 def list_all_categories(context):
     return [Category(*data)
             for data in catalog_data.fetch_all_categories(context)]

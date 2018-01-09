@@ -40,6 +40,33 @@ def make_category(context, name):
         raise catalog_errors.DBError()
 
 
+def fetch_category(context, category_id):
+    """
+    Returns tuple (id, name, created_at, modified_at).
+    """
+    try:
+        connection = connect(context.db_uri)
+        with connection:
+            cursor = connection.cursor()
+
+            fetch_query = '''
+                SELECT "id",
+                       "name",
+                       "created_at",
+                       "modified_at"
+                  FROM category
+                 WHERE id = ?;
+            '''
+            cursor.execute(fetch_query, (category_id,))
+            fetch_response = cursor.fetchone()
+
+            cursor.close()
+
+            return fetch_response
+    except:
+        raise catalog_errors.DBError()
+
+
 def fetch_all_categories(context):
     """
     Returns list of tuples [(id, name, created_at, modified_at), ...].

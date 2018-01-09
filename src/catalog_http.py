@@ -61,6 +61,21 @@ def create_category():
         response.status = 500
 
 
+@get("/api/v1/category/<category_id:int>")
+def get_category(category_id):
+    try:
+        i = catalog_api.get_category(gen_context(), category_id)
+
+        if i:
+            return _category_to_dict(i)
+        else:
+            response.status = 404
+
+    except Exception as Error:
+        _report_unkown_error(Error)
+        response.status = 500
+
+
 @get("/api/v1/categories")
 def list_all_categories():
     try:
