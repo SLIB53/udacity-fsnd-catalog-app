@@ -208,11 +208,17 @@ def delete_item(context, item_id):
         with connection:
             cursor = connection.cursor()
 
-            delete_query = '''
+            delete_item_query = '''
                 DELETE FROM item
                  WHERE id = ?;
             '''
-            cursor.execute(delete_query, (item_id,))
+            cursor.execute(delete_item_query, (item_id,))
+
+            delete_relationships_query = '''
+                DELETE FROM category_item
+                 WHERE item_id = ?;
+            '''
+            cursor.execute(delete_relationships_query, (item_id,))
 
             cursor.close()
     except:
