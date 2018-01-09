@@ -20,6 +20,11 @@ def public(filepath):
     return static_file(filename=filepath, root="public")
 
 
+@get("/item")
+def item():
+    return static_file(filename="item.html", root="public")
+
+
 #
 # API
 #
