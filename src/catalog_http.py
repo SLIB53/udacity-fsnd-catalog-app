@@ -10,19 +10,28 @@ import start_database
 # Public Directory
 #
 
-@get("/")
-def root():
-    return public("index.html")
-
-
 @get("/<filepath>")
 def public(filepath):
     return static_file(filename=filepath, root="public")
 
 
+#
+# Views
+#
+
+@get("/")
+def root():
+    return public("index.html")
+
+
+@get("/category")
+def category():
+    return public("category.html")
+
+
 @get("/item")
 def item():
-    return static_file(filename="item.html", root="public")
+    return public("item.html")
 
 
 #
@@ -189,6 +198,20 @@ def list_all_items():
                                                     q_order_by,
                                                     q_order,
                                                     q_limit)))
+
+        response.set_header('Content-Type', 'application/json')
+        return json.dumps(items)
+    except Exception as Error:
+        _report_unkown_error(Error)
+        response.status = 500
+
+
+@get("/api/v1/category/<category_id:int>/items")
+def list_all_items(category_id):
+    try:
+        items = list(map(_item_to_dict,
+                         catalog_api.list_child_items(gen_context(),
+                                                      category_id)))
 
         response.set_header('Content-Type', 'application/json')
         return json.dumps(items)

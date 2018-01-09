@@ -262,6 +262,33 @@ def fetch_all_items(context, order_by, order, limit):
         raise catalog_errors.DBError()
 
 
+def fetch_child_items(context, category_id):
+    """
+    Returns list of tuples
+    [(id, name, description, created_at, modified_at), ...].
+    """
+    try:
+        connection = connect(context.db_uri)
+        with connection:
+            cursor = connection.cursor()
+
+            fetch_query = '''
+                    SELECT id, name, description, created_at, modified_at
+                      FROM item
+                INNER JOIN category_item ON item_id=id
+                     WHERE category_item.category_id=?;
+            '''
+
+            cursor.execute(fetch_query, (category_id,))
+            fetch_response = cursor.fetchall()
+
+            cursor.close()
+
+            return fetch_response
+    except:
+        raise catalog_errors.DBError()
+
+
 def add_category_item_relationship(context, category_id, item_id):
     try:
         connection = connect(context.db_uri)

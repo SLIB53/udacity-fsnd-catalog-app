@@ -71,3 +71,10 @@ def create_child_item(context,
                                                 parent_category_id,
                                                 new_item.id)
     return new_item
+
+
+def list_child_items(context,
+                     parent_category_id):
+    return [Item(*data)
+            for data in catalog_data.fetch_child_items(context,
+                                                       parent_category_id)]

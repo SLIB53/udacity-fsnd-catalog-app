@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+
+    <title>CatalogApp</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script>
+        let urlParams = new URLSearchParams(window.location.search);
+        let categoryId = urlParams.get('category_id');
+
+        // Bind Category
+        window.addEventListener('load', function() {
+            let req = new XMLHttpRequest();
+            req.open("GET", "/api/v1/category/" + categoryId, true);
+            req.addEventListener('load', function() {
+                new Vue({
+                    el: '#category-title-text',
+                    data: {
+                        category: JSON.parse(req.responseText)
+                    }
+                });
+            });
+            req.send(null);
+        });
+
+        // Bind Items list
+        window.addEventListener('load', function() {
+            let req = new XMLHttpRequest();
+            req.open("GET",
+                     "/api/v1/category/" + categoryId + "/items",
+                     true
+            );
+            req.addEventListener('load', function() {
+                new Vue({
+                    el: '#child-items',
+                    data: {
+                        items: JSON.parse(req.responseText)
+                    }
+                });
+            });
+            req.send(null);
+        });
+    </script>
+</head>
+<body>
+    <header id="app-title-wrapper">
+        <h1 id="app-title">
+            <a href="index.html" class="app-title-text">Catalog App</a>
+        </h1>
+        <span id="login-button">Login</span>
+    </header>
+    <main>
+        <section>
+            <h2 id="category-title-text">{{ category.name }}</h2>
+            <ul id="child-items" class="catalog-object-list">
+                <li v-for="item in items">{{ item.name }}</li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>
