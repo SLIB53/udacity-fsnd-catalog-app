@@ -9,41 +9,44 @@
 
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script>
+        function loadCategoryBinding(selector, categoryId)
+        {
+            let request = new XMLHttpRequest();
+            request.open("GET", "/api/v1/category/" + categoryId, true);
+            request.addEventListener('load', function() {
+                new Vue({
+                    el: selector,
+                    data: { category: JSON.parse(request.responseText) }
+                });
+            });
+            request.send(null);
+        }
+
+        function loadItemsBinding(selector)
+        {
+            let request = new XMLHttpRequest();
+            request.open(
+                "GET",
+                "/api/v1/category/" + categoryId + "/items",
+                true
+            );
+            request.addEventListener('load', function() {
+                new Vue({
+                    el: selector,
+                    data: { items: JSON.parse(request.responseText) }
+                });
+            });
+            request.send(null);
+        }
+
         let urlParams = new URLSearchParams(window.location.search);
         let categoryId = urlParams.get('category_id');
 
-        // Bind Category
-        window.addEventListener('load', function() {
-            let req = new XMLHttpRequest();
-            req.open("GET", "/api/v1/category/" + categoryId, true);
-            req.addEventListener('load', function() {
-                new Vue({
-                    el: '#category-title-text',
-                    data: {
-                        category: JSON.parse(req.responseText)
-                    }
-                });
-            });
-            req.send(null);
-        });
+        window.addEventListener(
+            'load', loadCategoryBinding('#category-title-text', categoryId));
 
-        // Bind Items list
-        window.addEventListener('load', function() {
-            let req = new XMLHttpRequest();
-            req.open("GET",
-                     "/api/v1/category/" + categoryId + "/items",
-                     true
-            );
-            req.addEventListener('load', function() {
-                new Vue({
-                    el: '#child-items',
-                    data: {
-                        items: JSON.parse(req.responseText)
-                    }
-                });
-            });
-            req.send(null);
-        });
+        window.addEventListener(
+            'load', loadItemsBinding('#child-items'));
     </script>
 </head>
 <body>
@@ -55,8 +58,8 @@
     </header>
     <main>
         <section>
-            <h2 id="category-title-text">{{ category.name }}</h2>
-            <ul id="child-items" class="catalog-object-list">
+            <h2 v-cloak id="category-title-text">{{ category.name }}</h2>
+            <ul v-cloak id="child-items" class="catalog-object-list">
                 <li v-for="item in items">
                     <a class="catalog-object-button" v-bind:href="'/item?item_id=' + item.id"> {{ item.name }} </a>
                 </li>

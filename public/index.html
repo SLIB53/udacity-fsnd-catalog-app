@@ -7,32 +7,41 @@
 
     <script src="https://unpkg.com/vue"></script>
     <script>
-        window.addEventListener('load', function() {
-            var req = new XMLHttpRequest();
-            req.open("GET", "/api/v1/categories", true);
-            req.addEventListener('load', function() {
+        function loadCategoriesBinding(selector)
+        {
+            var request = new XMLHttpRequest();
+            request.open("GET", "/api/v1/categories", true);
+            request.addEventListener('load', function() {
                 new Vue({
-                    el: '#categories-wrapper',
-                    data: {
-                        categories: JSON.parse(req.responseText)
-                    }
+                    el: selector,
+                    data: { categories: JSON.parse(request.responseText) }
                 });
             });
-            req.send(null);
-        });
-        window.addEventListener('load', function() {
-            var req = new XMLHttpRequest();
-            req.open("GET", "/api/v1/items?order_by=age&order=asc&limit=7", true);
-            req.addEventListener('load', function() {
+            request.send(null);
+        }
+
+        function loadItemsBinding(selector)
+        {
+            var request = new XMLHttpRequest();
+            request.open(
+                "GET",
+                "/api/v1/items?order_by=age&order=asc&limit=7",
+                true
+            );
+            request.addEventListener('load', function() {
                 new Vue({
-                    el: '#recent-items-wrapper',
-                    data: {
-                        recentItems: JSON.parse(req.responseText)
-                    }
+                    el: selector,
+                    data: { recentItems: JSON.parse(request.responseText) }
                 });
             });
-            req.send(null);
-        });
+            request.send(null);
+        }
+
+        window.addEventListener(
+            'load', loadCategoriesBinding('#categories-wrapper'));
+
+        window.addEventListener(
+            'load', loadItemsBinding('#recent-items-wrapper'));
     </script>
 
     <title>CatalogApp</title>
@@ -43,7 +52,7 @@
         <span id="login-button">Login</span>
     </header>
     <main id="front-page-content">
-        <section id="categories-wrapper">
+        <section v-cloak id="categories-wrapper">
             <h2 class="front-page-header">Categories</h2>
             <ul class="catalog-object-list">
                 <li v-for="category in categories">
@@ -51,7 +60,7 @@
                 </li>
             </ul>
         </section>
-        <section id="recent-items-wrapper">
+        <section v-cloak id="recent-items-wrapper">
             <h2 class="front-page-header">Recent Items</h2>
             <ul class="catalog-object-list">
                 <li v-for="item in recentItems">

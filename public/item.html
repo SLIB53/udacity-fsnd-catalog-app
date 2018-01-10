@@ -9,17 +9,17 @@
 
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script>
-        function loadItemBinding(itemId, elemSelector)
+        function loadItemBinding(itemId, selector)
         {
-            let req = new XMLHttpRequest();
-            req.open("GET", "/api/v1/item/" + itemId, true);
-            req.addEventListener('load', function() {
+            let request = new XMLHttpRequest();
+            request.open("GET", "/api/v1/item/" + itemId, true);
+            request.addEventListener('load', function() {
                 new Vue({
-                    el: elemSelector,
-                    data: { item: JSON.parse(req.responseText) }
+                    el: selector,
+                    data: { item: JSON.parse(request.responseText) }
                 });
             });
-            req.send(null);
+            request.send(null);
         }
 
         let urlQuery = new URLSearchParams(window.location.search);
@@ -37,7 +37,7 @@
         <span id="login-button">Login</span>
     </header>
     <main>
-        <section id="item-wrapper">
+        <section v-cloak id="item-wrapper">
             <h2 id="item-title-text">{{ item.name }}</h2>
             <p>{{ item.description }}</p>
         </section>
