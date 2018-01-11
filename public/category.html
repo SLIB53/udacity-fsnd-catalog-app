@@ -68,15 +68,15 @@
             <h2 v-cloak id="category-title-text">{{ category.name }}</h2>
             <ul v-cloak id="child-items" class="catalog-object-list">
                 <li v-for="item in items">
-                    <a class="catalog-object-button"
+                    <a class="list-button"
                        v-bind:href="'/item?item_id=' + item.id">
                         {{ item.name }}
                     </a>
                 </li>
                 <li>
                     <a id="add-item-button"
-                       class="add-object-button"
-                       v-bind:href="'/category/' + categoryId + '/new-item'">
+                       class="list-button add-object-button"
+                       v-bind:href="'/new-item?parent_category_id=' + categoryId">
                         +
                     </a>
                 </li>

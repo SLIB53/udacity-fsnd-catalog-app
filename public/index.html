@@ -56,7 +56,7 @@
             <h2 class="front-page-header">Categories</h2>
             <ul class="catalog-object-list">
                 <li v-for="category in categories">
-                    <a class="catalog-object-button" v-bind:href="'/category?category_id=' + category.id"> {{ category.name }} </a>
+                    <a class="list-button" v-bind:href="'/category?category_id=' + category.id"> {{ category.name }} </a>
                 </li>
             </ul>
         </section>
@@ -64,7 +64,7 @@
             <h2 class="front-page-header">Recent Items</h2>
             <ul class="catalog-object-list">
                 <li v-for="item in recentItems">
-                    <a class="catalog-object-button" v-bind:href="'/item?item_id=' + item.id"> {{ item.name }} </a>
+                    <a class="list-button" v-bind:href="'/item?item_id=' + item.id"> {{ item.name }} </a>
                 </li>
             </ul>
         </section>

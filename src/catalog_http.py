@@ -34,6 +34,11 @@ def item():
     return public("item.html")
 
 
+@get("/new-item")
+def item():
+    return public("new-item.html")
+
+
 #
 # API
 #
