@@ -7,6 +7,30 @@ import start_database
 
 
 #
+# Views
+#
+
+@get("/")
+def root():
+    return static_file(filename="index.html", root="views")
+
+
+@get("/category")
+def category():
+    return static_file(filename="category.html", root="views")
+
+
+@get("/item")
+def item():
+    return static_file(filename="item.html", root="views")
+
+
+@get("/new-item")
+def item():
+    return static_file(filename="new-item.html", root="views")
+
+
+#
 # Public Directory
 #
 
@@ -15,28 +39,9 @@ def public(filepath):
     return static_file(filename=filepath, root="public")
 
 
-#
-# Views
-#
-
-@get("/")
-def root():
-    return public("index.html")
-
-
-@get("/category")
-def category():
-    return public("category.html")
-
-
-@get("/item")
-def item():
-    return public("item.html")
-
-
-@get("/new-item")
-def item():
-    return public("new-item.html")
+@get("/index.html")
+def index():
+    return root()
 
 
 #
