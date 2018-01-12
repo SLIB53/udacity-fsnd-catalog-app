@@ -39,8 +39,17 @@
     </header>
     <main>
         <section v-cloak id="item-wrapper">
-            <h2 id="item-title-text">{{ item.name }}</h2>
+            <h2>{{ item.name }}</h2>
             <p>{{ item.description }}</p>
+            <ul id="item-actions" class="button-list">
+                <li>
+                    <a
+                        class="list-button action-button"
+                        v-bind:href="'/edit-item?item_id=' + item.id">
+                        Edit
+                    </a>
+                </li>
+            </ul>
         </section>
     </main>
 </body>

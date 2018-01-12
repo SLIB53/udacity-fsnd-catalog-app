@@ -30,6 +30,11 @@ def item():
     return static_file(filename="new-item.html", root="views")
 
 
+@get("/edit-item")
+def item():
+    return static_file(filename="edit-item.html", root="views")
+
+
 #
 # Public Directory
 #

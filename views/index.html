@@ -54,15 +54,15 @@
     <main id="front-page-content">
         <section v-cloak id="categories-wrapper">
             <h2 class="front-page-header">Categories</h2>
-            <ul class="catalog-object-list">
+            <ul class="button-list">
                 <li v-for="category in categories">
                     <a class="list-button" v-bind:href="'/category?category_id=' + category.id"> {{ category.name }} </a>
                 </li>
             </ul>
         </section>
         <section v-cloak id="recent-items-wrapper">
-            <h2 class="front-page-header">Recent Items</h2>
-            <ul class="catalog-object-list">
+            <h2 class="front-page-header">New Items</h2>
+            <ul class="button-list">
                 <li v-for="item in recentItems">
                     <a class="list-button" v-bind:href="'/item?item_id=' + item.id"> {{ item.name }} </a>
                 </li>

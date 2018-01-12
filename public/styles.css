@@ -8,6 +8,7 @@
     font-family: 'Lato', sans-serif;
     font-weight: 400;
     font-size: 16px;
+    box-sizing: border-box;
 }
 
 body {
@@ -51,6 +52,32 @@ button {
 
 button:disabled {
     cursor: default;
+}
+
+form {
+    margin: 0;
+    border: 0;
+    padding: 6px;
+}
+
+fieldset {
+    margin: 0;
+    border: 0;
+    padding: 0;
+}
+
+input {
+    border: 0;
+    padding: 16px 0;
+    width: 100%;
+}
+
+textarea {
+    box-sizing: border-box;
+    margin: 16px 0;
+    border: 0;
+    padding: 10px;
+    min-width: 100%;
 }
 
 .invisible {
@@ -102,12 +129,12 @@ button:disabled {
     color: #00599d;
 }
 
-.catalog-object-list {
+.button-list {
     margin: 0;
     padding: 0;
 }
 
-.catalog-object-list li {
+.button-list li {
     display: block;
 }
 
@@ -132,54 +159,39 @@ button:disabled {
     padding: 6px 33px;
 }
 
-.list-button.add-object-button {
+.list-button.action-button {
     border-color: black;
     background-color: black;
     color: white;
     text-align: center;
 }
 
-.list-button.add-object-button:hover {
+.list-button.action-button:hover {
     border-color: #3c3c3c;
     background-color: #3c3c3c;
 }
 
-.list-button.add-object-button:focus {
+.list-button.action-button:focus {
     border-color: #9d9d9d;
     background-color: #9d9d9d;
 }
 
-
 /*
-    New Item Form
+    Item View
 */
 
-#new-item-form {
-    margin: 0;
-    border: 0;
-    padding: 6px;
+#item-actions {
+    margin-top: 34px;
 }
 
-#new-item-field-wrapper {
-    margin: 0;
-    border: 0;
-    padding: 0;
-    text-align: center;
-}
+
+/*
+    New Item
+*/
 
 #new-item-name-field {
-    border: 0;
     border-bottom:1px solid #222;
-    padding: 16px 0;
-    width: 100%;
     text-align: center;
-}
-
-#new-item-description-field {
-    margin: 16px 0;
-    border: 0;
-    padding: 10px;
-    min-width: 92%;
 }
 
 #new-item-form-submit-wrapper {
@@ -188,6 +200,31 @@ button:disabled {
 }
 
 .new-item-form-button {
+    margin: 0;
+    width: 100%;
+}
+
+
+/*
+    Edit Item
+*/
+
+#edit-item-form-submit-wrapper {
+    margin: 34px 0 0 0;
+}
+
+#edit-item-name-field {
+    margin: 16px 0;
+    padding: 16px 0;
+    border-bottom: 1px solid #222;
+    text-align: center;
+}
+
+#edit-item-description-field {
+    margin: 0 0 16px 0;
+}
+
+.edit-item-form-button {
     margin: 0;
     width: 100%;
 }
