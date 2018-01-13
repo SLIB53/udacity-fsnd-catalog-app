@@ -26,13 +26,18 @@ def item():
 
 
 @get("/new-item")
-def item():
+def new_item():
     return static_file(filename="new-item.html", root="views")
 
 
 @get("/edit-item")
-def item():
+def edit_item():
     return static_file(filename="edit-item.html", root="views")
+
+
+@get("/delete-item")
+def delete_item():
+    return static_file(filename="delete-item.html", root="views")
 
 
 #

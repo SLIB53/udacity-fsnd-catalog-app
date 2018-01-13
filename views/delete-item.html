@@ -35,30 +35,24 @@
 
         window.addEventListener(
             'load',
-            loadItemBinding(getCtxItemId(), "#edit-item-view-main")
+            loadItemBinding(getCtxItemId(), "#delete-item-warning-wrapper")
         );
 
         // Callbacks
 
-        function SubmitEditItemForm()
+        function SubmitForm()
         {
-            let submitButton = document.getElementById("edit-item-apply-button");
-            let nameField = document.getElementById("edit-item-name-field");
-            let descriptionField = document.getElementById("edit-item-description-field");
+            let submitButton = document.getElementById("delete-item-button");
 
             let onSend = function() {
                 submitButton.disabled = true;
                 submitButton.classList.add("invisible");
-                nameField.readOnly = true;
-                descriptionField.readOnly = true;
             }
 
             let onFail = function() {
                 submitButton.innerHTML = "Try Again";
                 submitButton.disabled = false;
                 submitButton.classList.remove("invisible");
-                nameField.readOnly = false;
-                descriptionField.readOnly = false;
             }
 
             let onSuccess = function() {
@@ -67,12 +61,10 @@
             }
 
             let itemId = getCtxItemId();
-            let name = nameField.value;
-            let description = descriptionField.value;
 
             let request = new XMLHttpRequest();
             request.open(
-                'PUT',
+                'DELETE',
                 "/api/v1/item/" + itemId,
                 true
             );
@@ -85,10 +77,7 @@
                     onFail();
             });
 
-            request.send(JSON.stringify({
-                'name': name,
-                'description': description
-            }));
+            request.send(null);
         }
     </script>
 </head>
@@ -99,39 +88,20 @@
         </h1>
         <span id="login-button">Login</span>
     </header>
-    <main id="edit-item-view-main">
-        <section>
-            <form id="edit-item-form">
-                <fieldset id="edit-item-field-wrapper">
-                    <input
-                        v-cloak
-                        id="edit-item-name-field"
-                        type="text"
-                        v-bind:value="item.name">
-                    <textarea
-                        v-cloak
-                        id="edit-item-description-field"
-                        rows="6">{{ item.description }}</textarea>
-                </fieldset>
-                <div id="edit-item-form-submit-wrapper">
-                    <button
-                        id="edit-item-apply-button"
-                        class="send-button edit-item-form-button"
-                        type="button"
-                        onclick="SubmitEditItemForm()">Apply</button>
-                </div>
-            </form>
-        </section>
-        <section id="edit-actions-wrapper">
-            <h3>Other Actions</h3>
-            <ul id="edit-actions-list" class="button-list">
-                <li>
-                    <a class="list-button action-button"
-                       v-bind:href="'/delete-item?item_id=' + item.id">
-                        Delete
-                    </a>
-                </li>
-            </ul>
+    <main>
+        <section id="delete-item-warning-wrapper">
+            <h3>Delete Confirmation</h3>
+            <p v-cloak>
+                Are you sure want to delete "{{ item.name }}"?
+                This action cannot be undone.
+            </p>
+            <div id="delete-item-submit-wrapper">
+                <button
+                    id="delete-item-button"
+                    class="send-button"
+                    type="button"
+                    onclick="SubmitForm()">Delete</button>
+            </div>
         </section>
     </main>
 </body>
