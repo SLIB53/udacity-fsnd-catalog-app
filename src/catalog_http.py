@@ -66,28 +66,31 @@ class RequestContext:
 def gen_context():
     return RequestContext(start_database.DB_FILE_PATH)  # TODO: use config file
 
-
-@post("/api/v1/category")
-def create_category():
-    def parse_body(json_body):
-        try:
-            assert(json_body is not None)
-            return json_body['name']
-        except:
-            raise catalog_errors.JSONBodyError()
-
-    try:
-        arg_name = parse_body(request.json)
-        response.status = 201
-        return _category_to_dict(catalog_api.create_category(gen_context(),
-                                                             arg_name))
-    except catalog_errors.JSONBodyError as BodyError:
-        _report_application_error(BodyError)
-        response.status = 400
-        return {"reason": "Body missing required parameter(s)."}
-    except Exception as Error:
-        _report_unkown_error(Error)
-        response.status = 500
+# ------------------------------------------------------------------------------
+# DISABLED
+# ------------------------------------------------------------------------------
+# @post("/api/v1/category")
+# def create_category():
+#     def parse_body(json_body):
+#         try:
+#             assert(json_body is not None)
+#             return json_body['name']
+#         except:
+#             raise catalog_errors.JSONBodyError()
+#
+#     try:
+#         arg_name = parse_body(request.json)
+#         response.status = 201
+#         return _category_to_dict(catalog_api.create_category(gen_context(),
+#                                                              arg_name))
+#     except catalog_errors.JSONBodyError as BodyError:
+#         _report_application_error(BodyError)
+#         response.status = 400
+#         return {"reason": "Body missing required parameter(s)."}
+#     except Exception as Error:
+#         _report_unkown_error(Error)
+#         response.status = 500
+# ------------------------------------------------------------------------------
 
 
 @get("/api/v1/category/<category_id:int>")
