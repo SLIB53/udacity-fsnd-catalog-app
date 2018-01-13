@@ -1,3 +1,4 @@
+from numbers import Number
 import src.catalog_data as catalog_data
 import src.catalog_errors as catalog_errors
 
@@ -18,6 +19,14 @@ class Item:
         self.created_at = created_at
         self.modified_at = modified_at
 
+    @staticmethod
+    def is_valid_name(item_name):
+        return isinstance(item_name, str) and item_name != ""
+
+    @staticmethod
+    def is_valid_description(item_description):
+        return isinstance(item_description, str)
+
 
 def create_category(context, name):
     return Category(*catalog_data.make_category(context, name))
@@ -34,7 +43,10 @@ def list_all_categories(context):
 
 
 def create_item(context, name, description):
-    return Item(*catalog_data.make_item(context, name, description))
+    if Item.is_valid_name(name) and Item.is_valid_description(description):
+        return Item(*catalog_data.make_item(context, name, description))
+    else:
+        raise catalog_errors.ItemDomainError()
 
 
 def get_item(context, item_id):
@@ -43,10 +55,13 @@ def get_item(context, item_id):
 
 
 def update_item(context, item_id, name=None, description=None):
-    if get_item(context, item_id):
-        catalog_data.update_item(context, item_id, name, description)
+    if Item.is_valid_name(name) and Item.is_valid_description(description):
+        if get_item(context, item_id):
+            catalog_data.update_item(context, item_id, name, description)
+        else:
+            raise catalog_errors.ObjectNotFoundError()
     else:
-        raise catalog_errors.ObjectNotFoundError()
+        raise catalog_errors.ItemDomainError()
 
 
 def delete_item(context, item_id):

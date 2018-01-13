@@ -138,6 +138,10 @@ def create_child_item(category_id):
         _report_application_error(BodyError)
         response.status = 400
         return {"reason": "Body missing required parameter(s)."}
+    except catalog_errors.ItemDomainError as DomainError:
+        _report_application_error(DomainError)
+        response.status = 400
+        return {"reason": "Invalid item object arguments."}
     except Exception as Error:
         _report_unkown_error(Error)
         response.status = 500
@@ -178,6 +182,10 @@ def update_item(item_id):
     except catalog_errors.ObjectNotFoundError as NotFoundError:
         _report_application_error(NotFoundError)
         response.status = 404
+    except catalog_errors.ItemDomainError as DomainError:
+        _report_application_error(DomainError)
+        response.status = 400
+        return {"reason": "Invalid item object arguments."}
     except Exception as Error:
         _report_unkown_error(Error)
         response.status = 500
