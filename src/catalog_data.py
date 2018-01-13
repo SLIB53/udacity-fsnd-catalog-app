@@ -177,7 +177,7 @@ def update_item(context, item_id, name=None, description=None):
                                (name, item_id))
                 dirty_flag = True
 
-            if description:
+            if description is not None:
                 update_description_query = '''
                     UPDATE item
                     SET description = ?
