@@ -4,4 +4,4 @@ CREATE TABLE item(
     "description"   TEXT,
     "created_at"    BIGINT,
     "modified_at"   BIGINT
-)
+);

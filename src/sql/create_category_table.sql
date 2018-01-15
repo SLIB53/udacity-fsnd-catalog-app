@@ -3,4 +3,4 @@ CREATE TABLE category(
     "name"          TEXT,
     "created_at"    BIGINT,
     "modified_at"   BIGINT
-)
+);

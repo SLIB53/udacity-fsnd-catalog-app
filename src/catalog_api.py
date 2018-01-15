@@ -1,7 +1,14 @@
-from numbers import Number
 import src.catalog_data as catalog_data
 import src.catalog_errors as catalog_errors
 
+
+# ==============================================================================
+# Content
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Category
+# ------------------------------------------------------------------------------
 
 class Category:
     def __init__(self, category_id, name, created_at, modified_at):
@@ -10,6 +17,24 @@ class Category:
         self.created_at = created_at
         self.modified_at = modified_at
 
+
+def create_category(context, name):
+    return Category(*catalog_data.make_category(context, name))
+
+
+def get_category(context, category_id):
+    data = catalog_data.fetch_category(context, category_id)
+    return Category(*data) if data else None
+
+
+def list_all_categories(context):
+    return [Category(*data)
+            for data in catalog_data.fetch_all_categories(context)]
+
+
+# ------------------------------------------------------------------------------
+# Item
+# ------------------------------------------------------------------------------
 
 class Item:
     def __init__(self, item_id, name, description, created_at, modified_at):
@@ -26,20 +51,6 @@ class Item:
     @staticmethod
     def is_valid_description(item_description):
         return isinstance(item_description, str)
-
-
-def create_category(context, name):
-    return Category(*catalog_data.make_category(context, name))
-
-
-def get_category(context, category_id):
-    data = catalog_data.fetch_category(context, category_id)
-    return Category(*data) if data else None
-
-
-def list_all_categories(context):
-    return [Category(*data)
-            for data in catalog_data.fetch_all_categories(context)]
 
 
 def create_item(context, name, description):

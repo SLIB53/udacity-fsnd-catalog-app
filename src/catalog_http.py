@@ -3,12 +3,19 @@ import traceback
 from bottle import delete, get, post, put, request, response, static_file, run
 import src.catalog_api as catalog_api
 import src.catalog_errors as catalog_errors
-import start_database
+import app_env
 
 
-#
+def gen_context():
+    """
+    Context fors serving HTTP requests.
+    """
+    return app_env.gen_main_context()
+
+
+# ==============================================================================
 # Views
-#
+# ==============================================================================
 
 @get("/")
 def root():
@@ -40,9 +47,9 @@ def delete_item():
     return static_file(filename="delete-item.html", root="views")
 
 
-#
+# ==============================================================================
 # Public Directory
-#
+# ==============================================================================
 
 @get("/<filepath>")
 def public(filepath):
@@ -54,17 +61,9 @@ def index():
     return root()
 
 
-#
-# API
-#
-
-class RequestContext:
-    def __init__(self, db_uri):
-        self.db_uri = db_uri
-
-
-def gen_context():
-    return RequestContext(start_database.DB_FILE_PATH)  # TODO: use config file
+# ==============================================================================
+# API v1
+# ==============================================================================
 
 # ------------------------------------------------------------------------------
 # DISABLED
@@ -250,6 +249,10 @@ def list_all_items(category_id):
         _report_unkown_error(Error)
         response.status = 500
 
+
+# ==============================================================================
+# Internal
+# ==============================================================================
 
 def _category_to_dict(category):
     return {

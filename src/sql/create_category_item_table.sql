@@ -3,4 +3,4 @@ CREATE TABLE category_item(
     "item_id"       INTEGER,
     FOREIGN KEY("category_id") REFERENCES category("id")
     FOREIGN KEY("item_id") REFERENCES item("id")
-)
+);

@@ -1,10 +1,10 @@
 from json import loads
 from bottle import run
-import src.catalog_http  # load bottle routes
+import app_env
 
 
 def start():
-    server_config = loads(open("config/server_config.json").read())
+    import src.catalog_http  # load bottle routes
 
-    run(host=server_config["host"],
-        port=server_config["port"])
+    run(host=app_env.SERVER_HOST,
+        port=app_env.SERVER_PORT)

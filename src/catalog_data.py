@@ -2,6 +2,14 @@ from sqlite3 import connect
 import src.catalog_errors as catalog_errors
 
 
+# ==============================================================================
+# Content
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Category
+# ------------------------------------------------------------------------------
+
 def make_category(context, name):
     """
     Returns tuple (id, name, created_at, modified_at).
@@ -131,6 +139,10 @@ def make_item(context, name, description):
     except:
         raise catalog_errors.DBError()
 
+
+# ------------------------------------------------------------------------------
+# Item
+# ------------------------------------------------------------------------------
 
 def fetch_item(context, item_id):
     """
@@ -288,6 +300,10 @@ def fetch_child_items(context, category_id):
     except:
         raise catalog_errors.DBError()
 
+
+# ------------------------------------------------------------------------------
+# Category/Item Relationship
+# ------------------------------------------------------------------------------
 
 def add_category_item_relationship(context, category_id, item_id):
     try:

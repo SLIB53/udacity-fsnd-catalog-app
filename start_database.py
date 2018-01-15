@@ -1,14 +1,21 @@
-from os.path import abspath, isfile
+from os.path import isfile
 from sqlite3 import connect
 import src.catalog_api as api
 import src.catalog_http as http
-
-DB_FILE_PATH = abspath("catalog.db")
+import app_env
 
 
 def setup():
+    print("Initializing database...")
+    initialize_db()
+    print("Writing default content...")
+    create_default_content()
+    print("Done.")
+
+
+def initialize_db():
     try:
-        connection = connect(DB_FILE_PATH)
+        connection = connect(app_env.DB_FILE_PATH)
         cursor = connection.cursor()
         cursor.execute(open("src/sql/create_category_table.sql").read())
         cursor.execute(open("src/sql/create_item_table.sql").read())
@@ -17,7 +24,9 @@ def setup():
         cursor.close()
         connection.commit()
 
-    context = http.gen_context()
+
+def create_default_content():
+    context = app_env.gen_main_context()
     animals_category = api.create_category(context, "Animals")
     api.create_child_item(context,
                           animals_category.id,
@@ -52,11 +61,11 @@ def setup():
 
 
 def check():
-    print("Checking for sqlite database file at %s" % DB_FILE_PATH)
-    if isfile(DB_FILE_PATH):
-        print("Found sqlite database file at %s" % DB_FILE_PATH)
+    print("Checking for sqlite database file at %s" % app_env.DB_FILE_PATH)
+    if isfile(app_env.DB_FILE_PATH):
+        print("Found sqlite database file at %s" % app_env.DB_FILE_PATH)
     else:
-        print("Missing sqlite database file at %s" % DB_FILE_PATH)
+        print("Missing sqlite database file at %s" % app_env.DB_FILE_PATH)
         return False
 
     return True
