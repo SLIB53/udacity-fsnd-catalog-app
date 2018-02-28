@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CatalogApp</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/url-search-params"></script>
+    <script>
+        // SPA Context
+
+        function getCtxItemId()
+        {
+            let urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('item_id');
+        }
+
+        // Binding
+
+        function loadItemBinding(itemId, selector)
+        {
+            let request = new XMLHttpRequest();
+            request.open("GET", "/api/v1/item/" + itemId, true);
+            request.addEventListener('load', function() {
+                new Vue({
+                    el: selector,
+                    data: { item: JSON.parse(request.responseText) }
+                });
+            });
+            request.send(null);
+        }
+
+        // - Load bindings...
+
+        window.addEventListener(
+            'load',
+            loadItemBinding(getCtxItemId(), "#delete-item-warning-wrapper")
+        );
+
+        // Callbacks
+
+        function SubmitForm()
+        {
+            let submitButton = document.getElementById("delete-item-button");
+
+            let onSend = function() {
+                submitButton.disabled = true;
+                submitButton.classList.add("invisible");
+            }
+
+            let onFail = function() {
+                submitButton.innerHTML = "Try Again";
+                submitButton.disabled = false;
+                submitButton.classList.remove("invisible");
+            }
+
+            let onSuccess = function() {
+                submitButton.innerHTML = "Success";
+                submitButton.classList.remove("invisible");
+            }
+
+            let itemId = getCtxItemId();
+
+            let request = new XMLHttpRequest();
+            request.open(
+                'DELETE',
+                "/api/v1/item/" + itemId,
+                true
+            );
+            request.setRequestHeader("Content-type", "application/json");
+            request.addEventListener('loadstart', onSend);
+            request.addEventListener('load', function() {
+                if (request.status >= 200 && request.status < 300)
+                    onSuccess();
+                else
+                    onFail();
+            });
+
+            request.send(null);
+        }
+    </script>
+</head>
+<body>
+    <header id="app-title-wrapper">
+        <h1 id="app-title">
+            <a href="/" class="app-title-text">Catalog App</a>
+        </h1>
+        <span id="login-button">Login</span>
+    </header>
+    <main>
+        <section id="delete-item-warning-wrapper">
+            <h3>Delete Confirmation</h3>
+            <p v-cloak>
+                Are you sure want to delete "{{ item.name }}"?
+                This action cannot be undone.
+            </p>
+            <div id="delete-item-submit-wrapper">
+                <button
+                    id="delete-item-button"
+                    class="send-button"
+                    type="button"
+                    onclick="SubmitForm()">Delete</button>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

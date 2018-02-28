@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+
+    <script src="https://unpkg.com/vue"></script>
+    <script>
+        function loadCategoriesBinding(selector)
+        {
+            var request = new XMLHttpRequest();
+            request.open("GET", "/api/v1/categories", true);
+            request.addEventListener('load', function() {
+                new Vue({
+                    el: selector,
+                    data: { categories: JSON.parse(request.responseText) }
+                });
+            });
+            request.send(null);
+        }
+
+        function loadItemsBinding(selector)
+        {
+            var request = new XMLHttpRequest();
+            request.open(
+                "GET",
+                "/api/v1/items?order_by=age&order=asc&limit=7",
+                true
+            );
+            request.addEventListener('load', function() {
+                new Vue({
+                    el: selector,
+                    data: { recentItems: JSON.parse(request.responseText) }
+                });
+            });
+            request.send(null);
+        }
+
+        window.addEventListener(
+            'load', loadCategoriesBinding('#categories-wrapper'));
+
+        window.addEventListener(
+            'load', loadItemsBinding('#recent-items-wrapper'));
+    </script>
+
+    <title>CatalogApp</title>
+</head>
+<body>
+    <header id="app-title-wrapper">
+        <h1 id="app-title"><a href="/" class="app-title-text">Catalog App</a></h1>
+        <span id="login-button">Login</span>
+    </header>
+    <main id="front-page-content">
+        <section v-cloak id="categories-wrapper">
+            <h2 class="front-page-header">Categories</h2>
+            <ul class="button-list">
+                <li v-for="category in categories">
+                    <a class="list-button" v-bind:href="'/category?category_id=' + category.id"> {{ category.name }} </a>
+                </li>
+            </ul>
+        </section>
+        <section v-cloak id="recent-items-wrapper">
+            <h2 class="front-page-header">New Items</h2>
+            <ul class="button-list">
+                <li v-for="item in recentItems">
+                    <a class="list-button" v-bind:href="'/item?item_id=' + item.id"> {{ item.name }} </a>
+                </li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>

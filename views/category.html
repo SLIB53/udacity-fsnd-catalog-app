@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+
+    <title>CatalogApp</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/url-search-params"></script>
+    <script>
+        function loadCategoryBinding(selector, categoryId)
+        {
+            let request = new XMLHttpRequest();
+            request.open("GET", "/api/v1/category/" + categoryId, true);
+            request.addEventListener('load', function() {
+                new Vue({
+                    el: selector,
+                    data: { category: JSON.parse(request.responseText) }
+                });
+            });
+            request.send(null);
+        }
+
+        function loadItemsBinding(selector)
+        {
+            let request = new XMLHttpRequest();
+            request.open(
+                "GET",
+                "/api/v1/category/" + categoryId + "/items",
+                true
+            );
+            request.addEventListener('load', function() {
+                new Vue({
+                    el: selector,
+                    data: { items: JSON.parse(request.responseText) }
+                });
+            });
+            request.send(null);
+        }
+
+        let urlParams = new URLSearchParams(window.location.search);
+        let categoryId = urlParams.get('category_id');
+
+        window.addEventListener(
+            'load', loadCategoryBinding('#category-title-text', categoryId));
+
+        window.addEventListener(
+            'load', loadItemsBinding('#child-items'));
+
+        window.addEventListener('load', function() {
+            new Vue({
+                el: '#add-item-button',
+                data: { categoryId: categoryId }
+            });
+        });
+    </script>
+</head>
+<body>
+    <header id="app-title-wrapper">
+        <h1 id="app-title">
+            <a href="/" class="app-title-text">Catalog App</a>
+        </h1>
+        <span id="login-button">Login</span>
+    </header>
+    <main>
+        <section>
+            <h2 v-cloak id="category-title-text">{{ category.name }}</h2>
+            <ul v-cloak id="child-items" class="button-list">
+                <li v-for="item in items">
+                    <a class="list-button"
+                       v-bind:href="'/item?item_id=' + item.id">
+                        {{ item.name }}
+                    </a>
+                </li>
+                <li>
+                    <a id="add-item-button"
+                       class="list-button action-button"
+                       v-bind:href="'/new-item?parent_category_id=' + categoryId">
+                        +
+                    </a>
+                </li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>

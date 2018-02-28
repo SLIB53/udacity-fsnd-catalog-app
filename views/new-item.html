@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CatalogApp</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/url-search-params"></script>
+    <script>
+        // SPA Context
+
+        function getCtxParentCategoryId()
+        {
+            let urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('parent_category_id');
+        }
+
+        // Binding
+
+        function loadCategoryBinding(selector, categoryId)
+        {
+            let request = new XMLHttpRequest();
+            request.open("GET", "/api/v1/category/" + categoryId, true);
+            request.addEventListener('load', function() {
+                new Vue({
+                    el: selector,
+                    data: { category: JSON.parse(request.responseText) }
+                });
+            });
+            request.send(null);
+        }
+
+        // - Load bindings...
+
+        window.addEventListener(
+            'load',
+            loadCategoryBinding('#category-title-text', getCtxParentCategoryId())
+        );
+
+        // Callbacks
+
+        function SubmitNewItemForm()
+        {
+            let submitButton = document.getElementById("new-item-create-button");
+            let nameField = document.getElementById("new-item-name-field");
+            let descriptionField = document.getElementById("new-item-description-field");
+
+            let onSend = function() {
+                submitButton.disabled = true;
+                submitButton.classList.add("invisible");
+                nameField.readOnly = true;
+                descriptionField.readOnly = true;
+            }
+
+            let onFail = function() {
+                submitButton.innerHTML = "Try Again";
+                submitButton.disabled = false;
+                submitButton.classList.remove("invisible");
+                nameField.readOnly = false;
+                descriptionField.readOnly = false;
+            }
+
+            let onSuccess = function() {
+                submitButton.innerHTML = "Success";
+                submitButton.classList.remove("invisible");
+            }
+
+            let parentCategoryId = getCtxParentCategoryId();
+            let name = nameField.value;
+            let description = descriptionField.value;
+
+            let request = new XMLHttpRequest();
+            request.open(
+                'POST',
+                "/api/v1/category/" + parentCategoryId + "/item",
+                true
+            );
+            request.setRequestHeader("Content-type", "application/json");
+            request.addEventListener('loadstart', onSend);
+            request.addEventListener('load', function() {
+                if (request.status >= 200 && request.status < 300)
+                    onSuccess();
+                else
+                    onFail();
+            });
+
+            request.send(JSON.stringify({
+                'name': name,
+                'description': description
+            }));
+        }
+    </script>
+</head>
+<body>
+    <header id="app-title-wrapper">
+        <h1 id="app-title">
+            <a href="/" class="app-title-text">Catalog App</a>
+        </h1>
+        <span id="login-button">Login</span>
+    </header>
+    <main>
+        <section>
+            <h2 v-cloak id="category-title-text">{{ category.name }}</h2>
+            <form id="new-item-form">
+                <fieldset id="new-item-field-wrapper">
+                    <input
+                        id="new-item-name-field"
+                        type="text"
+                        placeholder="Name">
+                    <textarea
+                        id="new-item-description-field"
+                        rows="6"
+                        placeholder="Description"></textarea>
+                </fieldset>
+                <div id="new-item-form-submit-wrapper">
+                    <button
+                        id="new-item-create-button"
+                        class="send-button new-item-form-button"
+                        type="button"
+                        onclick="SubmitNewItemForm()">Create</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

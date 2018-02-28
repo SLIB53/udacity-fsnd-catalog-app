@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+
+    <title>CatalogApp</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/url-search-params"></script>
+    <script>
+        function loadItemBinding(itemId, selector)
+        {
+            let request = new XMLHttpRequest();
+            request.open("GET", "/api/v1/item/" + itemId, true);
+            request.addEventListener('load', function() {
+                new Vue({
+                    el: selector,
+                    data: { item: JSON.parse(request.responseText) }
+                });
+            });
+            request.send(null);
+        }
+
+        let urlQuery = new URLSearchParams(window.location.search);
+
+        window.addEventListener('load', function() {
+            loadItemBinding(urlQuery.get('item_id'), '#item-wrapper');
+        });
+    </script>
+</head>
+<body>
+    <header id="app-title-wrapper">
+        <h1 id="app-title">
+            <a href="/" class="app-title-text">Catalog App</a>
+        </h1>
+        <span id="login-button">Login</span>
+    </header>
+    <main>
+        <section v-cloak id="item-wrapper">
+            <h2>{{ item.name }}</h2>
+            <pre>{{ item.description }}</pre>
+            <ul id="item-actions" class="button-list">
+                <li>
+                    <a
+                        class="list-button action-button"
+                        v-bind:href="'/edit-item?item_id=' + item.id">
+                        Edit
+                    </a>
+                </li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>

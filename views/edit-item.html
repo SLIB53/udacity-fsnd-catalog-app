@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CatalogApp</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/url-search-params"></script>
+    <script>
+        // SPA Context
+
+        function getCtxItemId()
+        {
+            let urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('item_id');
+        }
+
+        // Binding
+
+        function loadItemBinding(itemId, selector)
+        {
+            let request = new XMLHttpRequest();
+            request.open("GET", "/api/v1/item/" + itemId, true);
+            request.addEventListener('load', function() {
+                new Vue({
+                    el: selector,
+                    data: { item: JSON.parse(request.responseText) }
+                });
+            });
+            request.send(null);
+        }
+
+        // - Load bindings...
+
+        window.addEventListener(
+            'load',
+            loadItemBinding(getCtxItemId(), "#edit-item-view-main")
+        );
+
+        // Callbacks
+
+        function SubmitEditItemForm()
+        {
+            let submitButton = document.getElementById("edit-item-apply-button");
+            let nameField = document.getElementById("edit-item-name-field");
+            let descriptionField = document.getElementById("edit-item-description-field");
+
+            let onSend = function() {
+                submitButton.disabled = true;
+                submitButton.classList.add("invisible");
+                nameField.readOnly = true;
+                descriptionField.readOnly = true;
+            }
+
+            let onFail = function() {
+                submitButton.innerHTML = "Try Again";
+                submitButton.disabled = false;
+                submitButton.classList.remove("invisible");
+                nameField.readOnly = false;
+                descriptionField.readOnly = false;
+            }
+
+            let onSuccess = function() {
+                submitButton.innerHTML = "Success";
+                submitButton.classList.remove("invisible");
+            }
+
+            let itemId = getCtxItemId();
+            let name = nameField.value;
+            let description = descriptionField.value;
+
+            let request = new XMLHttpRequest();
+            request.open(
+                'PUT',
+                "/api/v1/item/" + itemId,
+                true
+            );
+            request.setRequestHeader("Content-type", "application/json");
+            request.addEventListener('loadstart', onSend);
+            request.addEventListener('load', function() {
+                if (request.status >= 200 && request.status < 300)
+                    onSuccess();
+                else
+                    onFail();
+            });
+
+            request.send(JSON.stringify({
+                'name': name,
+                'description': description
+            }));
+        }
+    </script>
+</head>
+<body>
+    <header id="app-title-wrapper">
+        <h1 id="app-title">
+            <a href="/" class="app-title-text">Catalog App</a>
+        </h1>
+        <span id="login-button">Login</span>
+    </header>
+    <main id="edit-item-view-main">
+        <section>
+            <form id="edit-item-form">
+                <fieldset id="edit-item-field-wrapper">
+                    <input
+                        v-cloak
+                        id="edit-item-name-field"
+                        type="text"
+                        v-bind:value="item.name">
+                    <textarea
+                        v-cloak
+                        id="edit-item-description-field"
+                        rows="6">{{ item.description }}</textarea>
+                </fieldset>
+                <div id="edit-item-form-submit-wrapper">
+                    <button
+                        id="edit-item-apply-button"
+                        class="send-button edit-item-form-button"
+                        type="button"
+                        onclick="SubmitEditItemForm()">Apply</button>
+                </div>
+            </form>
+        </section>
+        <section id="edit-actions-wrapper">
+            <h3>Other Actions</h3>
+            <ul id="edit-actions-list" class="button-list">
+                <li>
+                    <a class="list-button action-button"
+                       v-bind:href="'/delete-item?item_id=' + item.id">
+                        Delete
+                    </a>
+                </li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>
